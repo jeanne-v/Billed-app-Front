@@ -10,7 +10,6 @@ export default class NewBill {
     formNewBill.addEventListener("submit", this.handleSubmit);
     const file = this.document.querySelector(`input[data-testid="file"]`);
     file.addEventListener("change", this.handleChangeFile);
-    this.fileUrl = null;
     this.fileName = null;
     this.billId = null;
     new Logout({ document, localStorage, onNavigate });
@@ -18,8 +17,7 @@ export default class NewBill {
   handleChangeFile = (e) => {
     e.preventDefault();
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0];
-    const filePath = e.target.value.split(/\\/g);
-    const fileName = filePath[filePath.length - 1];
+    const fileName = file.name;
     const acceptedTypes = ["image/png", "image/jpg", "image/jpeg"];
     const doesFileHaveCorrectType = acceptedTypes.includes(file.type);
     if (!doesFileHaveCorrectType) {
@@ -40,6 +38,7 @@ export default class NewBill {
       this.createBill({ formData, fileName });
     }
   };
+
   handleSubmit = (e) => {
     e.preventDefault();
     if (
@@ -77,13 +76,13 @@ export default class NewBill {
           noContentType: true,
         },
       })
-      .then(({ fileUrl, key }) => {
-        console.log(fileUrl);
-        this.billId = key;
-        this.fileUrl = fileUrl;
+      .then((data) => {
+        this.billId = data.key;
         this.fileName = fileName;
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   // not need to cover this function by tests
