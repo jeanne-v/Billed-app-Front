@@ -47,23 +47,13 @@ describe("Given I am connected as an employee", () => {
 
     describe("When i click on a bill eye icon", () => {
       test("Then, a modal should open with the document attached to that bill", () => {
-        const onNavigate = (pathname) => {
-          document.body.innerHTML = ROUTES({ pathname });
-        };
-        Object.defineProperty(window, "localStorage", { value: localStorageMock });
-        window.localStorage.setItem(
-          "user",
-          JSON.stringify({
-            type: "Employee",
-          })
-        );
         document.body.innerHTML = BillsUI({ data: bills });
         new Bills({
           document,
-          onNavigate,
+          onNavigate: null,
           store: null,
           bills: bills,
-          localStorage: window.localStorage,
+          localStorage: null,
         });
         $.fn.modal = jest
           .fn()
